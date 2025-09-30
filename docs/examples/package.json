@@ -1,0 +1,31 @@
+{
+  "name": "fivem-custom-auth-examples",
+  "version": "1.0.0",
+  "description": "Example authentication servers for custom FiveM build",
+  "main": "auth-server-simple.js",
+  "scripts": {
+    "start:simple": "node auth-server-simple.js",
+    "start:jwt": "node auth-server-jwt.js",
+    "dev:simple": "nodemon auth-server-simple.js",
+    "dev:jwt": "nodemon auth-server-jwt.js"
+  },
+  "keywords": [
+    "fivem",
+    "authentication",
+    "server",
+    "gaming"
+  ],
+  "author": "FiveM Custom Build",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
