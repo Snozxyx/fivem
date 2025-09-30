@@ -1,0 +1,165 @@
+# FiveM Server Configuration - Custom Build with 2048 Player Support
+# This is an example configuration for the modified FiveM build
+# Copy this file to your server directory and rename to server.cfg
+
+## Server Identity
+sv_hostname "Custom FiveM Server | 2048 Players | Local Network"
+sv_projectName "Custom FiveM Project"
+sv_projectDesc "Modified FiveM server for local/private use with increased limits"
+
+## Player Limits
+# With the modified build, you can set up to 2048 players
+sv_maxclients 256  # Start conservative, increase as needed
+
+## Network Endpoints
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+
+## OneSync Settings (REQUIRED for >32 players)
+# OneSync must be enabled for player counts above 32
+set onesync on
+set onesync_enableInfinity 1
+set onesync_enableBeyond 1
+set onesync_distanceCullVehicles true
+
+## Custom Authentication System
+# For local/private servers with custom auth
+set sv_customAuth "enabled"
+set sv_customLicenseKey "CHANGE-THIS-TO-YOUR-GENERATED-KEY"
+set sv_authEndpoint "http://localhost:3000/validate"
+
+# Disable default Cfx.re authentication (local use only)
+set sv_licenseKey ""
+set sv_master1 ""
+set sv_master2 ""
+set sv_master3 ""
+set sv_licenseKeyToken "none"
+
+## Game Build Settings
+# Leave empty for custom build
+set sv_enforceGameBuild ""
+set sv_pureLevel 0
+
+## Streaming and Pool Size Increases
+# These settings take advantage of the increased streaming memory
+# Adjust based on your server's resource usage
+set sv_poolSizesIncrease "{
+  \"entities\": 20000,
+  \"props\": 10000,
+  \"vehicles\": 5000,
+  \"peds\": 5000,
+  \"pickups\": 5000,
+  \"objects\": 5000,
+  \"doors\": 5000,
+  \"models\": 5000
+}"
+
+## Network Performance Settings
+set sv_enableNetworkedPhysics true
+set sv_enableNetworkedSounds true
+set sv_endpointprivacy true
+
+# Network bandwidth (bytes/sec per client)
+# Increase for better quality with high player counts
+set sv_maxClientsPerPlayer 64
+set sv_maxPlayerStateBufferMs 200
+
+## Script Settings
+set sv_scriptHookAllowed 0
+set sv_debugLog "false"
+set sv_trace "false"
+
+# Maximum script runtime before warning (ms)
+set sv_script_timeout 1000
+
+## Server Listing
+# For private servers, set these to empty
+set tags ""
+set sv_listingIPOverride ""
+set rcon_password "CHANGE-THIS-STRONG-PASSWORD"
+
+## Steam Integration
+# Set to "none" for custom auth
+set steam_webApiKey "none"
+
+## Loading Messages
+load_server_icon logo.png
+sets banner_detail "https://your-server-website.com"
+sets banner_connecting "https://your-server-website.com/connecting"
+
+## Server Information Variables
+sets locale "en-US"
+sets sv_projectDesc "Custom FiveM Server with Enhanced Capabilities"
+sets sv_projectVersion "1.0.0"
+
+## Core Resources
+# Essential resources for server operation
+ensure mapmanager
+ensure chat
+ensure spawnmanager
+ensure sessionmanager
+ensure basic-gamemode
+ensure hardcap
+ensure rconlog
+
+## Additional Resources
+# Add your custom resources here
+# ensure your-resource-name
+
+## Admin Configuration
+add_ace group.admin command allow # allow all commands
+add_ace group.admin command.quit deny # don't allow quit
+add_principal identifier.steam:YOUR_STEAM_ID group.admin
+
+## Performance Optimization
+# Entity cleanup settings
+set sv_entityCleanupDelay 30000
+set sv_entityLockdownDelay 120000
+
+# Event throttling
+set sv_eventPoolSize 100
+
+# FD3 settings (collision streaming)
+set game_enableFlyThroughWindscreen false
+
+## Convars for Custom Features
+set sv_customPlayerLimit 2048
+set sv_enableCustomAuth true
+set sv_enableExtendedStreaming true
+
+## Development Settings (disable in production)
+# set sv_debugLog "true"
+# set sv_trace "true"
+# set sv_debugMono "false"
+# set sv_debugQueue "false"
+
+## Backup and Logging
+set sv_logFile "server.log"
+set sv_logRotate "true"
+set sv_logMaxSize "10485760"  # 10MB
+
+## Advanced Settings
+# Only modify if you know what you're doing
+set txAdmin-version "1.0.0"
+set txAdmin-locale "en"
+
+# Force headless mode (server)
+set sv_forceIndoor false
+set sv_forceWeather "CLEAR"
+
+## Custom Commands
+# Add any custom server commands here
+
+## Resource-Specific Settings
+# Configure individual resources as needed
+
+## End of Configuration
+# Server will start after this line
+# Monitor logs for any errors or warnings
+
+# Notes:
+# 1. Change all "CHANGE-THIS" values before starting
+# 2. Adjust sv_maxclients based on your server capacity
+# 3. Monitor performance with different player counts
+# 4. Enable debug logging if issues arise
+# 5. Keep authentication credentials secure
