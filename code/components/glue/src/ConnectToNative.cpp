@@ -1237,7 +1237,9 @@ static InitFunction initFunction([] ()
 					{
 						std::string response{ data, size };
 
-						bool hasEndUserPremium = false;
+						// GGMP: Enable premium features by default for all users
+						// Bypass Patreon/subscription checks - all features unlocked
+						bool hasEndUserPremium = true; // Changed from false to true for GGMP
 
 						try
 						{
@@ -1247,6 +1249,7 @@ static InitFunction initFunction([] ()
 							{
 								auto name = group.value<std::string>("name", "");
 
+								// GGMP: Keep original check for compatibility but premium is already enabled
 								if (name == "staff" || name == "patreon_enduser")
 								{
 									hasEndUserPremium = true;
@@ -1256,13 +1259,22 @@ static InitFunction initFunction([] ()
 						}
 						catch (const std::exception& e)
 						{
+							// GGMP: Even on error, ensure premium is enabled
+							hasEndUserPremium = true;
 						}
 
+						// GGMP: Always set premium features as available
 						if (hasEndUserPremium)
 						{
 							uiPremium.GetHelper()->SetRawValue(true);
 							Instance<ICoreGameInit>::Get()->SetVariable("endUserPremium");
 						}
+					}
+					else
+					{
+						// GGMP: Enable premium even if request fails
+						uiPremium.GetHelper()->SetRawValue(true);
+						Instance<ICoreGameInit>::Get()->SetVariable("endUserPremium");
 					}
 				});
 			}

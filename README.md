@@ -1,6 +1,8 @@
-# <img src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f40c.png" width="32" height="32"> Cfx.re (FiveM/RedM) - Custom Build
+# <img src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f3ae.png" width="32" height="32"> GGMP - Game Global Multiplayer Platform
 
-This repository contains the code for the Cfx.re projects, among which are the following:
+**GGMP (Game Global Multiplayer Platform)** - A custom build of Cfx.re (FiveM/RedM) with enhanced capabilities for private and local server deployments.
+
+This repository contains the code for the GGMP platform, built on top of Cfx.re projects:
 
 * [FiveM](https://fivem.net/), a dual-purpose (SP/MP) modification framework for the PC version of Grand Theft Auto V as released by Rockstar Games.
 * [RedM](https://redm.gg/), a modification framework for the PC version of Red Dead Redemption 2 as released by Rockstar Games.
@@ -8,15 +10,18 @@ This repository contains the code for the Cfx.re projects, among which are the f
 
 On the multiplayer aspect, the GTA/RAGE modifications differ from other similar modifications by utilizing the embedded game networking frameworks, building a modification framework around them, and expanding the game's functionality on an end-to-end level, directly binding to the RAGE Technology Group's base frameworks and Rockstar North's GTA codebase.
 
-## ⚡ Custom Build Features
+## ⚡ GGMP Custom Features
 
-This repository includes custom modifications for local/private server use:
+GGMP includes custom modifications for local/private server use with all premium features unlocked:
 
 ### 🚀 Enhanced Capabilities
-- **2048 Player Support** - Increased from 42 player limit
-- **18MB Streaming Memory** - 33% more than default (13.5MB)
-- **Custom Authentication** - Local/private authentication system support
-- **Custom Keymaster** - Bypass official keymaster for local deployments
+- **2048 Player Support** - Massive player capacity (increased from 42 player limit)
+- **18MB Streaming Memory** - 33% more than default (13.5MB) for better asset loading
+- **Custom Authentication** - Complete local/private authentication system support
+- **Custom Keymaster** - Bypass official keymaster for local deployments with built-in key generator
+- **All Premium Features Unlocked** - No Patreon or subscription requirements
+- **Unlimited Resources** - No artificial limitations on server resources
+- **Enhanced Clothing & Asset Streaming** - Full support for unlimited custom content
 
 ### 📚 Complete Documentation
 All modifications are fully documented with examples and guides:

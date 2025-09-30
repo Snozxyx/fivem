@@ -1,14 +1,15 @@
-# Custom FiveM Build - Documentation Index
+# GGMP Custom Build - Documentation Index
 
-Welcome! This is a modified FiveM build designed for local/private server use with increased limits and custom authentication.
+Welcome to **GGMP (Game Global Multiplayer Platform)**! This is a modified FiveM build designed for local/private server use with increased limits, custom authentication, and all premium features unlocked.
 
-## 🎯 What's Different?
+## 🎯 What's Different in GGMP?
 
-This build includes three major enhancements:
+GGMP includes four major enhancements:
 
-1. **2048 Player Support** - Increased from the default 42 player limit
-2. **Enhanced Streaming** - 33% more streaming memory for better asset loading
-3. **Custom Authentication** - Local/private authentication system for complete control
+1. **2048 Player Support** - Massive player capacity increased from the default 42 player limit
+2. **Enhanced Streaming** - 33% more streaming memory (18MB) for better asset loading and unlimited clothing/props
+3. **Custom Authentication** - Complete local/private authentication system for total server control
+4. **All Premium Features Unlocked** - No Patreon/subscription requirements, all features available to everyone
 
 ## 📚 Documentation
 
