@@ -1,4 +1,9 @@
 import { useState } from 'react'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
+import { Lock } from 'lucide-react'
 
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState('')
@@ -20,61 +25,68 @@ export default function Login({ onLogin }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center dark:bg-ggmp-darker px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-6xl font-bold text-ggmp-primary mb-4">GGMP</h1>
-          <h2 className="text-3xl font-semibold">Admin Panel</h2>
-          <p className="mt-2 text-gray-400">Game Global Multiplayer Platform</p>
+          <div className="flex justify-center mb-4">
+            <div className="bg-primary/10 p-4 rounded-full">
+              <Lock className="w-12 h-12 text-primary" />
+            </div>
+          </div>
+          <h1 className="text-6xl font-bold text-primary mb-2">GGMP</h1>
+          <h2 className="text-2xl font-semibold">Admin Panel</h2>
+          <p className="mt-2 text-muted-foreground">Game Global Multiplayer Platform</p>
         </div>
 
-        <div className="card">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium mb-2">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="input w-full"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium mb-2">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="input w-full"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            {error && (
-              <div className="bg-red-900/30 border border-red-700 text-red-200 px-4 py-3 rounded-lg">
-                {error}
+        <Card>
+          <CardHeader>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>Enter your credentials to access the admin panel</CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  name="username"
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin"
+                />
               </div>
-            )}
 
-            <button type="submit" className="btn-primary w-full">
-              Sign in
-            </button>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                />
+              </div>
 
-            <div className="text-sm text-center text-gray-400">
-              Default credentials: admin / admin
-            </div>
+              {error && (
+                <div className="bg-destructive/20 border border-destructive text-destructive-foreground px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-2">
+              <Button type="submit" className="w-full">
+                Sign in
+              </Button>
+              <p className="text-sm text-center text-muted-foreground">
+                Default credentials: admin / admin
+              </p>
+            </CardFooter>
           </form>
-        </div>
+        </Card>
       </div>
     </div>
   )

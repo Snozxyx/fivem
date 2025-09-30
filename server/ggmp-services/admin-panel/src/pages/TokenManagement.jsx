@@ -1,5 +1,12 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Card, CardContent } from '../components/ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog'
+import { Plus, Trash2 } from 'lucide-react'
 
 export default function TokenManagement() {
   const [tokens, setTokens] = useState([])
@@ -61,29 +68,31 @@ export default function TokenManagement() {
   }
 
   const TokenRow = ({ token }) => (
-    <tr className="border-b border-gray-800 hover:bg-ggmp-light transition-colors">
-      <td className="px-6 py-4 font-mono text-sm">{token.key}</td>
-      <td className="px-6 py-4">{token.serverName}</td>
-      <td className="px-6 py-4">{token.maxPlayers}</td>
-      <td className="px-6 py-4">{token.usage?.length || 0}</td>
-      <td className="px-6 py-4 text-sm text-gray-400">
+    <TableRow>
+      <TableCell className="font-mono text-sm">{token.key}</TableCell>
+      <TableCell>{token.serverName}</TableCell>
+      <TableCell>{token.maxPlayers}</TableCell>
+      <TableCell>{token.usage?.length || 0}</TableCell>
+      <TableCell className="text-sm text-muted-foreground">
         {new Date(token.registered).toLocaleDateString()}
-      </td>
-      <td className="px-6 py-4">
-        <button
+      </TableCell>
+      <TableCell>
+        <Button
           onClick={() => handleRevokeToken(token.key)}
-          className="btn-danger text-sm"
+          variant="destructive"
+          size="sm"
         >
+          <Trash2 className="w-4 h-4 mr-2" />
           Revoke
-        </button>
-      </td>
-    </tr>
+        </Button>
+      </TableCell>
+    </TableRow>
   )
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Loading tokens...</div>
+        <div className="text-muted-foreground">Loading tokens...</div>
       </div>
     )
   }
@@ -92,117 +101,103 @@ export default function TokenManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-ggmp-primary">Token Management</h1>
-          <p className="text-gray-400 mt-2">Manage GGMP license keys</p>
+          <h1 className="text-3xl font-bold text-primary">Token Management</h1>
+          <p className="text-muted-foreground mt-2">Manage GGMP license keys</p>
         </div>
-        <button
+        <Button
           onClick={() => {
             setNewToken({ ...newToken, key: generateKey() })
             setShowCreateModal(true)
           }}
-          className="btn-primary"
         >
-          + Generate New Token
-        </button>
+          <Plus className="w-4 h-4 mr-2" />
+          Generate New Token
+        </Button>
       </div>
 
       {/* Tokens Table */}
-      <div className="card overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead className="bg-ggmp-light">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Token Key
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Server Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Max Players
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Usage Count
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Created
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Token Key</TableHead>
+                <TableHead>Server Name</TableHead>
+                <TableHead>Max Players</TableHead>
+                <TableHead>Usage Count</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {tokens.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="px-6 py-12 text-center text-gray-400">
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                     No tokens found. Create your first token to get started.
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ) : (
                 tokens.map(token => <TokenRow key={token.key} token={token} />)
               )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       {/* Create Token Modal */}
-      {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="card max-w-lg w-full">
-            <h2 className="text-2xl font-bold text-ggmp-primary mb-4">Generate New Token</h2>
-            <form onSubmit={handleCreateToken} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-2">Token Key</label>
-                <input
-                  type="text"
-                  className="input w-full font-mono"
-                  value={newToken.key}
-                  onChange={(e) => setNewToken({ ...newToken, key: e.target.value })}
-                  required
-                  readOnly
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Server Name</label>
-                <input
-                  type="text"
-                  className="input w-full"
-                  value={newToken.serverName}
-                  onChange={(e) => setNewToken({ ...newToken, serverName: e.target.value })}
-                  required
-                  placeholder="My GGMP Server"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Max Players</label>
-                <input
-                  type="number"
-                  className="input w-full"
-                  value={newToken.maxPlayers}
-                  onChange={(e) => setNewToken({ ...newToken, maxPlayers: parseInt(e.target.value) })}
-                  required
-                  min="1"
-                  max="2048"
-                />
-              </div>
-              <div className="flex space-x-3 pt-4">
-                <button type="submit" className="btn-primary flex-1">
-                  Create Token
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowCreateModal(false)}
-                  className="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex-1"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-primary">Generate New Token</DialogTitle>
+            <DialogDescription>Create a new license key for a GGMP server</DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleCreateToken} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="token-key">Token Key</Label>
+              <Input
+                id="token-key"
+                type="text"
+                className="font-mono"
+                value={newToken.key}
+                onChange={(e) => setNewToken({ ...newToken, key: e.target.value })}
+                required
+                readOnly
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="server-name">Server Name</Label>
+              <Input
+                id="server-name"
+                type="text"
+                value={newToken.serverName}
+                onChange={(e) => setNewToken({ ...newToken, serverName: e.target.value })}
+                required
+                placeholder="My GGMP Server"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="max-players">Max Players</Label>
+              <Input
+                id="max-players"
+                type="number"
+                value={newToken.maxPlayers}
+                onChange={(e) => setNewToken({ ...newToken, maxPlayers: parseInt(e.target.value) })}
+                required
+                min="1"
+                max="2048"
+              />
+            </div>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setShowCreateModal(false)}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Create Token
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
