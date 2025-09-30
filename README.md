@@ -1,6 +1,8 @@
-# <img src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f40c.png" width="32" height="32"> Cfx.re (FiveM/RedM) - Custom Build
+# <img src="https://cdnjs.cloudflare.com/ajax/libs/emojione/2.2.6/assets/png/1f3ae.png" width="32" height="32"> GGMP - Game Global Multiplayer Platform
 
-This repository contains the code for the Cfx.re projects, among which are the following:
+**GGMP (Game Global Multiplayer Platform)** - A custom build of Cfx.re (FiveM/RedM) with enhanced capabilities for private and local server deployments.
+
+This repository contains the code for the GGMP platform, built on top of Cfx.re projects:
 
 * [FiveM](https://fivem.net/), a dual-purpose (SP/MP) modification framework for the PC version of Grand Theft Auto V as released by Rockstar Games.
 * [RedM](https://redm.gg/), a modification framework for the PC version of Red Dead Redemption 2 as released by Rockstar Games.
@@ -8,15 +10,18 @@ This repository contains the code for the Cfx.re projects, among which are the f
 
 On the multiplayer aspect, the GTA/RAGE modifications differ from other similar modifications by utilizing the embedded game networking frameworks, building a modification framework around them, and expanding the game's functionality on an end-to-end level, directly binding to the RAGE Technology Group's base frameworks and Rockstar North's GTA codebase.
 
-## ⚡ Custom Build Features
+## ⚡ GGMP Custom Features
 
-This repository includes custom modifications for local/private server use:
+GGMP includes custom modifications for local/private server use with all premium features unlocked:
 
 ### 🚀 Enhanced Capabilities
-- **2048 Player Support** - Increased from 42 player limit
-- **18MB Streaming Memory** - 33% more than default (13.5MB)
-- **Custom Authentication** - Local/private authentication system support
-- **Custom Keymaster** - Bypass official keymaster for local deployments
+- **2048 Player Support** - Massive player capacity (increased from 42 player limit)
+- **18MB Streaming Memory** - 33% more than default (13.5MB) for better asset loading
+- **Custom Authentication** - Complete local/private authentication system support
+- **Custom Keymaster** - Bypass official keymaster for local deployments with built-in key generator
+- **All Premium Features Unlocked** - No Patreon or subscription requirements
+- **Unlimited Resources** - No artificial limitations on server resources
+- **Enhanced Clothing & Asset Streaming** - Full support for unlimited custom content
 
 ### 📚 Complete Documentation
 All modifications are fully documented with examples and guides:
@@ -57,9 +62,21 @@ To play FiveM, simply download the launcher binaries from the [website](https://
 
 To develop FiveM, please follow the documentation in [docs/](https://github.com/citizenfx/fivem/tree/master/docs) in the repository.
 
-### Building Custom Version
+### Building GGMP
 
-**Windows:**
+#### Automated Build (Windows - GitHub Actions)
+
+GGMP includes automated Windows builds via GitHub Actions:
+
+1. Push code or create PR to trigger build
+2. Workflow builds FiveM client and server
+3. Artifacts are uploaded automatically
+4. Download from Actions tab or Releases
+
+See [`.github/workflows/build-windows.yml`](.github/workflows/build-windows.yml) for details.
+
+#### Manual Build - Windows
+
 ```cmd
 git clone https://github.com/Snozxyx/fivem.git -c core.symlinks=true
 cd fivem
@@ -70,7 +87,10 @@ fxd gen -game five
 fxd vs -game five
 ```
 
-**Linux (Server):**
+Then build in Visual Studio (F7).
+
+#### Manual Build - Linux (Server)
+
 ```bash
 git clone https://github.com/Snozxyx/fivem.git
 cd fivem
@@ -117,17 +137,39 @@ if (size == 0xD00000) {
 }
 ```
 
-### 3. Custom Authentication
+### 3. Premium Features Unlocked
+**File:** `code/components/glue/src/ConnectToNative.cpp`
+```cpp
+// GGMP: Enable premium features by default
+bool hasEndUserPremium = true;
+```
+
+### 4. Custom Authentication
 **File:** `code/components/net/src/NetLibrary.cpp`
 - Added `OnInterceptConnectionForAuth` event
 - Custom token validation support
 - Local authentication system hooks
 
+## Generate License Keys
+
+GGMP includes built-in keymaster generators:
+
+```bash
+# Using Node.js
+cd scripts
+node generate-keymaster.js --count 5 --name "My GGMP Server"
+
+# Using Python
+python3 generate-keymaster.py --count 5 --name "My GGMP Server"
+```
+
+Generated keys look like: `GGMP-XXXX-XXXX-XXXX-XXXX-XXXX`
+
 ## Example Configuration
 
 ```cfg
-# server.cfg
-sv_hostname "Custom FiveM Server - 2048 Players"
+# server.cfg - GGMP Server Configuration
+sv_hostname "GGMP Server - 2048 Players"
 sv_maxclients 256
 
 # OneSync (required for >32 players)
@@ -135,9 +177,11 @@ set onesync on
 set onesync_enableInfinity 1
 set onesync_enableBeyond 1
 
+# GGMP License Key (generated with scripts/generate-keymaster.js)
+set sv_customLicenseKey "GGMP-1234-5678-90AB-CDEF-1234"
+
 # Custom authentication
 set sv_customAuth "enabled"
-set sv_customLicenseKey "your-key"
 set sv_authEndpoint "http://localhost:3000/validate"
 
 # Pool sizes

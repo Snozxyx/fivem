@@ -1,14 +1,15 @@
-# Custom FiveM Build - Documentation Index
+# GGMP Custom Build - Documentation Index
 
-Welcome! This is a modified FiveM build designed for local/private server use with increased limits and custom authentication.
+Welcome to **GGMP (Game Global Multiplayer Platform)**! This is a modified FiveM build designed for local/private server use with increased limits, custom authentication, and all premium features unlocked.
 
-## 🎯 What's Different?
+## 🎯 What's Different in GGMP?
 
-This build includes three major enhancements:
+GGMP includes four major enhancements:
 
-1. **2048 Player Support** - Increased from the default 42 player limit
-2. **Enhanced Streaming** - 33% more streaming memory for better asset loading
-3. **Custom Authentication** - Local/private authentication system for complete control
+1. **2048 Player Support** - Massive player capacity increased from the default 42 player limit
+2. **Enhanced Streaming** - 33% more streaming memory (18MB) for better asset loading and unlimited clothing/props
+3. **Custom Authentication** - Complete local/private authentication system for total server control
+4. **All Premium Features Unlocked** - No Patreon/subscription requirements, all features available to everyone
 
 ## 📚 Documentation
 
@@ -87,6 +88,19 @@ cd build/server/linux
 make config=release -j$(nproc)
 ```
 
+### Generate GGMP License Keys
+
+```bash
+# Using Node.js
+cd scripts
+node generate-keymaster.js --count 5 --name "My GGMP Server"
+
+# Using Python
+python3 generate-keymaster.py --count 5 --name "My GGMP Server"
+```
+
+Output will be saved to `keymaster-keys.json` with keys in format: `GGMP-XXXX-XXXX-XXXX-XXXX-XXXX`
+
 ### Run Example Auth Server
 
 ```bash
@@ -99,27 +113,35 @@ npm run start:simple
 
 ### Player Capacity
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Max Players | 42 | 2048 |
 | Memory per Client | ~50 KB | ~50 KB |
 | Total Client Memory | ~2 MB | ~1 GB |
 
 ### Streaming Memory
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Streaming Pool | 13.5 MB | 18 MB |
 | Increase | - | +33% |
 | More Assets | Standard | Enhanced |
 
 ### Authentication
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Auth System | Cfx.re Keymaster | Custom/Local |
 | Requires Internet | Yes | No (optional) |
 | Local Control | Limited | Complete |
+
+### Premium Features
+
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
+| Premium Perks | Patreon Required | Always Enabled |
+| Subscription | Required | Not Required |
+| Feature Access | Limited | Unlimited |
 
 ## 🔧 Configuration Examples
 

@@ -1,0 +1,333 @@
+name: Build GGMP Windows Client
+
+on:
+  push:
+    branches: [ master, main, develop ]
+    paths:
+      - 'code/**'
+      - '.github/workflows/build-windows.yml'
+  pull_request:
+    branches: [ master, main, develop ]
+    paths:
+      - 'code/**'
+      - '.github/workflows/build-windows.yml'
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build configuration'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Debug
+          - Release
+
+env:
+  BUILD_TYPE: ${{ github.event.inputs.build_type || 'Release' }}
+
+jobs:
+  build-windows-client:
+    name: Build FiveM Windows Client
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.0,18.0)'
+          
+      - name: Cache Chrome CEF
+        id: cache-chrome
+        uses: actions/cache@v4
+        with:
+          path: |
+            code/tools/ci/chrome
+          key: chrome-cef-${{ runner.os }}
+          
+      - name: Download Chrome CEF
+        if: steps.cache-chrome.outputs.cache-hit != 'true'
+        shell: powershell
+        run: |
+          .\fxd.ps1 get-chrome
+          
+      - name: Cache Build Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            code/build
+            ~/.nuget/packages
+          key: ${{ runner.os }}-build-deps-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-deps-
+            
+      - name: Build game natives
+        shell: cmd
+        run: |
+          prebuild.cmd
+          
+      - name: Generate project files
+        shell: powershell
+        run: |
+          .\fxd.ps1 gen -game five
+          
+      - name: Build FiveM
+        shell: cmd
+        run: |
+          cd code\build\five\windows
+          msbuild Cfx.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
+          
+      - name: Package artifacts
+        shell: powershell
+        run: |
+          $artifactPath = "code\bin\five\${{ env.BUILD_TYPE }}"
+          
+          # Create archive directory
+          New-Item -ItemType Directory -Force -Path "artifacts"
+          
+          # Copy essential files
+          Copy-Item -Path "$artifactPath\*" -Destination "artifacts\" -Recurse -Force
+          
+          # Create build info
+          $buildInfo = @{
+            version = "GGMP-1.0.0"
+            build = "${{ github.run_number }}"
+            commit = "${{ github.sha }}"
+            branch = "${{ github.ref_name }}"
+            buildType = "${{ env.BUILD_TYPE }}"
+            timestamp = (Get-Date -Format o)
+            features = @{
+              maxPlayers = 2048
+              streamingMemory = "18MB"
+              customAuth = $true
+              customKeymaster = $true
+            }
+          }
+          $buildInfo | ConvertTo-Json -Depth 10 | Out-File -FilePath "artifacts\build-info.json"
+          
+      - name: Upload FiveM build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggmp-fivem-windows-${{ env.BUILD_TYPE }}-${{ github.run_number }}
+          path: |
+            artifacts/
+            !artifacts/**/*.pdb
+          retention-days: 30
+          
+      - name: Upload debug symbols (Release only)
+        if: env.BUILD_TYPE == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggmp-fivem-windows-symbols-${{ github.run_number }}
+          path: |
+            artifacts/**/*.pdb
+          retention-days: 90
+
+  build-windows-server:
+    name: Build FiveM Windows Server
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install setuptools
+          
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.0,18.0)'
+          
+      - name: Cache Build Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            code/build
+            ~/.nuget/packages
+          key: ${{ runner.os }}-server-build-deps-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-server-build-deps-
+            
+      - name: Build game natives
+        shell: cmd
+        run: |
+          prebuild.cmd
+          
+      - name: Generate project files (Server)
+        shell: powershell
+        run: |
+          .\fxd.ps1 gen -game server
+          
+      - name: Build FiveM Server
+        shell: cmd
+        run: |
+          cd code\build\server\windows
+          msbuild Cfx.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
+          
+      - name: Package server artifacts
+        shell: powershell
+        run: |
+          $artifactPath = "code\bin\server\windows\${{ env.BUILD_TYPE }}"
+          
+          # Create archive directory
+          New-Item -ItemType Directory -Force -Path "server-artifacts"
+          
+          # Copy essential files
+          Copy-Item -Path "$artifactPath\*" -Destination "server-artifacts\" -Recurse -Force
+          
+          # Create build info
+          $buildInfo = @{
+            version = "GGMP-Server-1.0.0"
+            build = "${{ github.run_number }}"
+            commit = "${{ github.sha }}"
+            branch = "${{ github.ref_name }}"
+            buildType = "${{ env.BUILD_TYPE }}"
+            timestamp = (Get-Date -Format o)
+            features = @{
+              maxPlayers = 2048
+              customAuth = $true
+              customKeymaster = $true
+              unlimitedResources = $true
+            }
+          }
+          $buildInfo | ConvertTo-Json -Depth 10 | Out-File -FilePath "server-artifacts\build-info.json"
+          
+      - name: Upload server build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggmp-fivem-server-windows-${{ env.BUILD_TYPE }}-${{ github.run_number }}
+          path: |
+            server-artifacts/
+            !server-artifacts/**/*.pdb
+          retention-days: 30
+          
+      - name: Upload server debug symbols (Release only)
+        if: env.BUILD_TYPE == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggmp-fivem-server-windows-symbols-${{ github.run_number }}
+          path: |
+            server-artifacts/**/*.pdb
+          retention-days: 90
+
+  create-release:
+    name: Create Release Package
+    needs: [build-windows-client, build-windows-server]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Download client artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ggmp-fivem-windows-${{ env.BUILD_TYPE }}-${{ github.run_number }}
+          path: release/client
+          
+      - name: Download server artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ggmp-fivem-server-windows-${{ env.BUILD_TYPE }}-${{ github.run_number }}
+          path: release/server
+          
+      - name: Create release package
+        run: |
+          cd release
+          
+          # Create README
+          cat > README.md << 'EOF'
+          # GGMP FiveM Build - Windows Release
+          
+          ## What's Included
+          
+          - **client/** - FiveM Windows client with GGMP modifications
+          - **server/** - FiveM Windows server with GGMP modifications
+          - **docs/** - Documentation and setup guides
+          - **scripts/** - Keymaster generator and utilities
+          
+          ## Features
+          
+          - ✅ 2048 player support
+          - ✅ 18MB streaming memory (33% increase)
+          - ✅ Custom authentication system
+          - ✅ Custom keymaster support
+          - ✅ All premium features unlocked
+          
+          ## Quick Start
+          
+          ### Server Setup
+          
+          1. Extract the server files
+          2. Generate a keymaster key:
+             ```
+             node scripts/generate-keymaster.js
+             ```
+          3. Configure server.cfg with your key
+          4. Start the server: `FXServer.exe +exec server.cfg`
+          
+          ### Client Setup
+          
+          1. Extract the client files to your FiveM directory
+          2. Launch FiveM
+          3. Connect to your server
+          
+          ## Documentation
+          
+          See the included docs/ directory or visit:
+          https://github.com/Snozxyx/fivem
+          
+          ## Build Information
+          
+          - Build: ${{ github.run_number }}
+          - Commit: ${{ github.sha }}
+          - Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          EOF
+          
+          # Copy additional files
+          mkdir -p docs scripts
+          cp -r ../docs/* docs/ || true
+          cp -r ../scripts/* scripts/ || true
+          
+          # Create archive
+          cd ..
+          tar -czf ggmp-fivem-windows-full-${{ github.run_number }}.tar.gz release/
+          
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ggmp-fivem-windows-full-${{ github.run_number }}
+          path: ggmp-fivem-windows-full-${{ github.run_number }}.tar.gz
+          retention-days: 90

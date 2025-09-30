@@ -7,6 +7,7 @@
 
 #include "StdInc.h"
 #include "NetLibrary.h"
+#include "GGMPConfig.h"
 #include <base64.h>
 #include "ICoreGameInit.h"
 #include <mutex>
@@ -40,7 +41,7 @@
 #include "NetEvent.h"
 
 #ifndef POLICY_LIVE_ENDPOINT
-#define POLICY_LIVE_ENDPOINT "https://policy-live.fivem.net/"
+#define POLICY_LIVE_ENDPOINT "http://localhost:3002/"
 #endif
 
 #ifdef FIVEM_INTERNAL_POSTMAP
