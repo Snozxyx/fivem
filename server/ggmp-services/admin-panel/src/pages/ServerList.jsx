@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge'
+import { Server, Users, HardDrive } from 'lucide-react'
 
 export default function ServerList() {
   const [servers, setServers] = useState([])
@@ -28,25 +29,36 @@ export default function ServerList() {
     <Card>
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <CardTitle className="text-ggmp-primary">{server.name || 'Unnamed Server'}</CardTitle>
-            <CardDescription className="mt-1">{server.host}</CardDescription>
+          <div className="flex-1 flex items-start gap-3">
+            <div className="bg-primary/10 p-2 rounded-lg">
+              <Server className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <CardTitle className="text-primary">{server.name || 'Unnamed Server'}</CardTitle>
+              <CardDescription className="mt-1">{server.host}</CardDescription>
+            </div>
           </div>
           <Badge variant="success">Online</Badge>
         </div>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-sm text-gray-400">Players</p>
-            <p className="text-2xl font-bold">{server.players || 0} / {server.maxPlayers || 2048}</p>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm text-muted-foreground">Players</p>
+              <p className="text-2xl font-bold">{server.players || 0} / {server.maxPlayers || 2048}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-sm text-gray-400">Server ID</p>
-            <p className="text-sm font-mono">{server.id.substring(0, 8)}...</p>
+          <div className="flex items-center gap-2">
+            <HardDrive className="w-4 h-4 text-muted-foreground" />
+            <div>
+              <p className="text-sm text-muted-foreground">Server ID</p>
+              <p className="text-sm font-mono">{server.id.substring(0, 8)}...</p>
+            </div>
           </div>
         </div>
-        <p className="text-xs text-gray-400 mt-4">
+        <p className="text-xs text-muted-foreground mt-4">
           Last seen: {new Date(server.lastSeen).toLocaleString()}
         </p>
       </CardContent>
@@ -56,7 +68,7 @@ export default function ServerList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Loading servers...</div>
+        <div className="text-muted-foreground">Loading servers...</div>
       </div>
     )
   }
@@ -64,14 +76,14 @@ export default function ServerList() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-ggmp-primary">Server List</h1>
-        <p className="text-gray-400 mt-2">Registered GGMP servers</p>
+        <h1 className="text-3xl font-bold text-primary">Server List</h1>
+        <p className="text-muted-foreground mt-2">Registered GGMP servers</p>
       </div>
 
       {servers.length === 0 ? (
         <Card>
           <CardContent className="text-center py-12">
-            <p className="text-gray-400">No servers registered yet</p>
+            <p className="text-muted-foreground">No servers registered yet</p>
           </CardContent>
         </Card>
       ) : (

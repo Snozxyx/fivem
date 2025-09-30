@@ -3,9 +3,10 @@ import axios from 'axios'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../components/ui/card'
+import { Card, CardContent } from '../components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../components/ui/table'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../components/ui/dialog'
+import { Plus, Trash2 } from 'lucide-react'
 
 export default function TokenManagement() {
   const [tokens, setTokens] = useState([])
@@ -72,7 +73,7 @@ export default function TokenManagement() {
       <TableCell>{token.serverName}</TableCell>
       <TableCell>{token.maxPlayers}</TableCell>
       <TableCell>{token.usage?.length || 0}</TableCell>
-      <TableCell className="text-sm text-gray-400">
+      <TableCell className="text-sm text-muted-foreground">
         {new Date(token.registered).toLocaleDateString()}
       </TableCell>
       <TableCell>
@@ -81,6 +82,7 @@ export default function TokenManagement() {
           variant="destructive"
           size="sm"
         >
+          <Trash2 className="w-4 h-4 mr-2" />
           Revoke
         </Button>
       </TableCell>
@@ -90,7 +92,7 @@ export default function TokenManagement() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-400">Loading tokens...</div>
+        <div className="text-muted-foreground">Loading tokens...</div>
       </div>
     )
   }
@@ -99,8 +101,8 @@ export default function TokenManagement() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-ggmp-primary">Token Management</h1>
-          <p className="text-gray-400 mt-2">Manage GGMP license keys</p>
+          <h1 className="text-3xl font-bold text-primary">Token Management</h1>
+          <p className="text-muted-foreground mt-2">Manage GGMP license keys</p>
         </div>
         <Button
           onClick={() => {
@@ -108,7 +110,8 @@ export default function TokenManagement() {
             setShowCreateModal(true)
           }}
         >
-          + Generate New Token
+          <Plus className="w-4 h-4 mr-2" />
+          Generate New Token
         </Button>
       </div>
 
@@ -129,7 +132,7 @@ export default function TokenManagement() {
             <TableBody>
               {tokens.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-12 text-gray-400">
+                  <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">
                     No tokens found. Create your first token to get started.
                   </TableCell>
                 </TableRow>
@@ -145,7 +148,7 @@ export default function TokenManagement() {
       <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-ggmp-primary">Generate New Token</DialogTitle>
+            <DialogTitle className="text-primary">Generate New Token</DialogTitle>
             <DialogDescription>Create a new license key for a GGMP server</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleCreateToken} className="space-y-4">

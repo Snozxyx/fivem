@@ -6,6 +6,7 @@ import ServerList from './pages/ServerList'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
 import { Button } from './components/ui/button'
+import { LayoutDashboard, Key, Server, Settings as SettingsIcon, LogOut } from 'lucide-react'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -37,39 +38,44 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen dark:bg-ggmp-darker">
+      <div className="min-h-screen bg-background">
         {/* Navigation */}
-        <nav className="dark:bg-ggmp-dark border-b border-gray-800">
+        <nav className="bg-card border-b border-border">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <h1 className="text-2xl font-bold text-ggmp-primary">GGMP</h1>
+                  <h1 className="text-2xl font-bold text-primary">GGMP</h1>
                 </div>
                 <div className="hidden md:block">
-                  <div className="ml-10 flex items-baseline space-x-4">
-                    <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-ggmp-light transition-colors">
+                  <div className="ml-10 flex items-baseline space-x-2">
+                    <Link to="/" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors flex items-center gap-2">
+                      <LayoutDashboard className="w-4 h-4" />
                       Dashboard
                     </Link>
-                    <Link to="/tokens" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-ggmp-light transition-colors">
+                    <Link to="/tokens" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors flex items-center gap-2">
+                      <Key className="w-4 h-4" />
                       Tokens
                     </Link>
-                    <Link to="/servers" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-ggmp-light transition-colors">
+                    <Link to="/servers" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors flex items-center gap-2">
+                      <Server className="w-4 h-4" />
                       Servers
                     </Link>
-                    <Link to="/settings" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-ggmp-light transition-colors">
+                    <Link to="/settings" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-accent transition-colors flex items-center gap-2">
+                      <SettingsIcon className="w-4 h-4" />
                       Settings
                     </Link>
                   </div>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <span className="text-sm text-gray-400">Welcome, {currentUser?.username}</span>
+                <span className="text-sm text-muted-foreground">Welcome, {currentUser?.username}</span>
                 <Button
                   onClick={handleLogout}
                   variant="destructive"
                   size="sm"
                 >
+                  <LogOut className="w-4 h-4 mr-2" />
                   Logout
                 </Button>
               </div>
