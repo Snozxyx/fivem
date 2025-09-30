@@ -1,10 +1,17 @@
-# Custom Build Changelog
+# GGMP Build Changelog
 
-All notable changes to the custom FiveM build are documented in this file.
+All notable changes to the GGMP (Game Global Multiplayer Platform) build are documented in this file.
 
 ## [1.0.0] - 2024
 
 ### Added - Major Features
+
+#### GGMP Branding & Identity
+- **Established GGMP as the platform name**
+  - Updated all documentation with GGMP branding
+  - Created comprehensive GGMP documentation
+  - Added GGMP logo and identity elements
+  - Consistent naming across all files
 
 #### Player Limit Enhancement
 - **Increased MAX_CLIENTS from 42 to 2048**
@@ -18,7 +25,14 @@ All notable changes to the custom FiveM build are documented in this file.
   - Modified: `code/components/gta-streaming-five/src/UnkStuff.cpp`
   - Increase: 33% more streaming memory
   - Impact: Better asset loading, reduced pop-in
-  - Supports larger custom maps
+  - Supports larger custom maps and unlimited clothing
+
+#### All Premium Features Unlocked
+- **Removed Patreon/subscription requirements**
+  - Modified: `code/components/glue/src/ConnectToNative.cpp`
+  - All premium features enabled by default
+  - No external authentication required for premium perks
+  - Complete feature access for everyone
 
 #### Custom Authentication System
 - **Added custom authentication hooks**
@@ -26,6 +40,20 @@ All notable changes to the custom FiveM build are documented in this file.
   - Feature: `OnInterceptConnectionForAuth` event
   - Allows: Local/private authentication systems
   - Bypasses: Official Cfx.re keymaster requirement
+
+#### Keymaster Generator Scripts
+- **Created GGMP license key generator**
+  - Tool: `scripts/generate-keymaster.js` (Node.js version)
+  - Tool: `scripts/generate-keymaster.py` (Python version)
+  - Features: Batch key generation, metadata support
+  - Format: GGMP-XXXX-XXXX-XXXX-XXXX-XXXX
+
+#### GitHub Actions Build Workflow
+- **Automated Windows builds**
+  - Workflow: `.github/workflows/build-windows.yml`
+  - Builds: FiveM client and server for Windows
+  - Features: Artifact uploads, release packages
+  - Caching: Dependencies and build artifacts
 
 ### Added - Documentation
 

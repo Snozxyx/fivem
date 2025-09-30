@@ -88,6 +88,19 @@ cd build/server/linux
 make config=release -j$(nproc)
 ```
 
+### Generate GGMP License Keys
+
+```bash
+# Using Node.js
+cd scripts
+node generate-keymaster.js --count 5 --name "My GGMP Server"
+
+# Using Python
+python3 generate-keymaster.py --count 5 --name "My GGMP Server"
+```
+
+Output will be saved to `keymaster-keys.json` with keys in format: `GGMP-XXXX-XXXX-XXXX-XXXX-XXXX`
+
 ### Run Example Auth Server
 
 ```bash
@@ -100,27 +113,35 @@ npm run start:simple
 
 ### Player Capacity
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Max Players | 42 | 2048 |
 | Memory per Client | ~50 KB | ~50 KB |
 | Total Client Memory | ~2 MB | ~1 GB |
 
 ### Streaming Memory
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Streaming Pool | 13.5 MB | 18 MB |
 | Increase | - | +33% |
 | More Assets | Standard | Enhanced |
 
 ### Authentication
 
-| Feature | Default | Custom Build |
-|---------|---------|--------------|
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
 | Auth System | Cfx.re Keymaster | Custom/Local |
 | Requires Internet | Yes | No (optional) |
 | Local Control | Limited | Complete |
+
+### Premium Features
+
+| Feature | Default | GGMP Build |
+|---------|---------|------------|
+| Premium Perks | Patreon Required | Always Enabled |
+| Subscription | Required | Not Required |
+| Feature Access | Limited | Unlimited |
 
 ## 🔧 Configuration Examples
 

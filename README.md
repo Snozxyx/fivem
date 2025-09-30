@@ -62,9 +62,21 @@ To play FiveM, simply download the launcher binaries from the [website](https://
 
 To develop FiveM, please follow the documentation in [docs/](https://github.com/citizenfx/fivem/tree/master/docs) in the repository.
 
-### Building Custom Version
+### Building GGMP
 
-**Windows:**
+#### Automated Build (Windows - GitHub Actions)
+
+GGMP includes automated Windows builds via GitHub Actions:
+
+1. Push code or create PR to trigger build
+2. Workflow builds FiveM client and server
+3. Artifacts are uploaded automatically
+4. Download from Actions tab or Releases
+
+See [`.github/workflows/build-windows.yml`](.github/workflows/build-windows.yml) for details.
+
+#### Manual Build - Windows
+
 ```cmd
 git clone https://github.com/Snozxyx/fivem.git -c core.symlinks=true
 cd fivem
@@ -75,7 +87,10 @@ fxd gen -game five
 fxd vs -game five
 ```
 
-**Linux (Server):**
+Then build in Visual Studio (F7).
+
+#### Manual Build - Linux (Server)
+
 ```bash
 git clone https://github.com/Snozxyx/fivem.git
 cd fivem
@@ -122,17 +137,39 @@ if (size == 0xD00000) {
 }
 ```
 
-### 3. Custom Authentication
+### 3. Premium Features Unlocked
+**File:** `code/components/glue/src/ConnectToNative.cpp`
+```cpp
+// GGMP: Enable premium features by default
+bool hasEndUserPremium = true;
+```
+
+### 4. Custom Authentication
 **File:** `code/components/net/src/NetLibrary.cpp`
 - Added `OnInterceptConnectionForAuth` event
 - Custom token validation support
 - Local authentication system hooks
 
+## Generate License Keys
+
+GGMP includes built-in keymaster generators:
+
+```bash
+# Using Node.js
+cd scripts
+node generate-keymaster.js --count 5 --name "My GGMP Server"
+
+# Using Python
+python3 generate-keymaster.py --count 5 --name "My GGMP Server"
+```
+
+Generated keys look like: `GGMP-XXXX-XXXX-XXXX-XXXX-XXXX`
+
 ## Example Configuration
 
 ```cfg
-# server.cfg
-sv_hostname "Custom FiveM Server - 2048 Players"
+# server.cfg - GGMP Server Configuration
+sv_hostname "GGMP Server - 2048 Players"
 sv_maxclients 256
 
 # OneSync (required for >32 players)
@@ -140,9 +177,11 @@ set onesync on
 set onesync_enableInfinity 1
 set onesync_enableBeyond 1
 
+# GGMP License Key (generated with scripts/generate-keymaster.js)
+set sv_customLicenseKey "GGMP-1234-5678-90AB-CDEF-1234"
+
 # Custom authentication
 set sv_customAuth "enabled"
-set sv_customLicenseKey "your-key"
 set sv_authEndpoint "http://localhost:3000/validate"
 
 # Pool sizes

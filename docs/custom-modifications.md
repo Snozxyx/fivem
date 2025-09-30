@@ -1,15 +1,17 @@
-# Custom FiveM Build Documentation
+# GGMP Build Documentation
 
-This document provides comprehensive instructions for building a customized version of FiveM with the following modifications:
+This document provides comprehensive instructions for building and deploying GGMP (Game Global Multiplayer Platform) with the following enhancements:
 - Increased player limit (from 42 to 2048)
-- Increased streaming memory limits
+- Increased streaming memory limits (18MB)
 - Custom authentication system
 - Custom keymaster implementation for local/private use
+- All premium features unlocked (no Patreon required)
+- Automated Windows build workflow
 
 ## Table of Contents
 
 1. [Prerequisites](#prerequisites)
-2. [Building FiveM](#building-fivem)
+2. [Building GGMP](#building-ggmp)
 3. [Understanding the Modifications](#understanding-the-modifications)
 4. [Custom Authentication System](#custom-authentication-system)
 5. [Custom Keymaster Setup](#custom-keymaster-setup)
@@ -20,7 +22,7 @@ This document provides comprehensive instructions for building a customized vers
 
 ### Windows Build Requirements
 
-To build FiveM on Windows, you need:
+To build GGMP on Windows, you need:
 
 - **Visual Studio 2022** (Community edition or higher) with:
   - Workloads:
@@ -452,7 +454,7 @@ app.listen(3000, () => {
 
 ## Custom Keymaster Setup
 
-For local/private server use, you can create your own keymaster replacement.
+For local/private server use, GGMP provides built-in keymaster key generation.
 
 ### Why Custom Keymaster?
 
@@ -461,16 +463,83 @@ The official Cfx.re keymaster:
 - Tied to Cfx.re services
 - Has restrictions on commercial use
 
-A custom keymaster allows:
+GGMP custom keymaster allows:
 - Fully offline/local operation
 - No external dependencies
 - Complete control over server keys
+- Batch key generation
+- No limitations or restrictions
+
+### Using GGMP Keymaster Generator
+
+GGMP includes two keymaster generator scripts for easy key generation.
+
+#### Quick Start
+
+**Using Node.js:**
+```bash
+cd scripts
+node generate-keymaster.js --count 5 --name "My GGMP Server"
+```
+
+**Using Python:**
+```bash
+cd scripts
+python3 generate-keymaster.py --count 5 --name "My GGMP Server"
+```
+
+#### Options
+
+Both scripts support the following options:
+
+- `--output <file>` - Output file for keys (default: keymaster-keys.json)
+- `--count <number>` - Number of keys to generate (default: 1)
+- `--name <name>` - Server name (default: GGMP Server)
+- `--help, -h` - Show help message
+
+#### Generated Key Format
+
+Keys are generated in the format:
+```
+GGMP-XXXX-XXXX-XXXX-XXXX-XXXX
+```
+
+Example output file (keymaster-keys.json):
+```json
+{
+  "generator": "GGMP Keymaster Generator",
+  "version": "1.0.0",
+  "generated": "2024-01-01T12:00:00Z",
+  "serverName": "My GGMP Server",
+  "totalKeys": 3,
+  "keys": [
+    {
+      "key": "GGMP-1234-5678-90AB-CDEF-1234",
+      "id": 1,
+      "serverName": "My GGMP Server",
+      "generated": "2024-01-01T12:00:00Z",
+      "expiresAt": null,
+      "maxPlayers": 2048,
+      "features": {
+        "customAuth": true,
+        "enhancedStreaming": true,
+        "unlimitedPlayers": true,
+        "premiumPerks": true
+      },
+      "type": "GGMP_LOCAL",
+      "version": "1.0.0"
+    }
+  ]
+}
+```
 
 ### Implementation
 
 #### 1. Generate Server Keys Locally
 
-Create a key generation utility:
+Use the provided GGMP keymaster generator scripts (see above).
+
+For custom implementations, here's an example in C++:
 
 ```cpp
 // code/tools/keygen/main.cpp
