@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Label } from '../components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 
 export default function Settings() {
   const [settings, setSettings] = useState({
@@ -28,39 +32,43 @@ export default function Settings() {
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* General Settings */}
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">General Settings</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Maximum Players</label>
-              <input
+        <Card>
+          <CardHeader>
+            <CardTitle>General Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="max-players">Maximum Players</Label>
+              <Input
+                id="max-players"
                 type="number"
-                className="input w-full"
                 value={settings.maxPlayers}
                 onChange={(e) => setSettings({ ...settings, maxPlayers: parseInt(e.target.value) })}
                 min="1"
                 max="2048"
               />
-              <p className="text-xs text-gray-400 mt-1">Maximum allowed players per server</p>
+              <p className="text-xs text-gray-400">Maximum allowed players per server</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Streaming Memory</label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="streaming-memory">Streaming Memory</Label>
+              <Input
+                id="streaming-memory"
                 type="text"
-                className="input w-full"
                 value={settings.streamingMemory}
                 onChange={(e) => setSettings({ ...settings, streamingMemory: e.target.value })}
               />
-              <p className="text-xs text-gray-400 mt-1">Memory allocated for asset streaming</p>
+              <p className="text-xs text-gray-400">Memory allocated for asset streaming</p>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Security Settings */}
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Security Settings</h2>
-          <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Security Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -86,13 +94,15 @@ export default function Settings() {
                 <p className="text-xs text-gray-400">All servers must have valid license keys</p>
               </div>
             </label>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Interface Settings */}
-        <div className="card">
-          <h2 className="text-xl font-semibold mb-4">Interface Settings</h2>
-          <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Interface Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
             <label className="flex items-center space-x-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -105,14 +115,14 @@ export default function Settings() {
                 <p className="text-xs text-gray-400">Automatically refresh data every 30 seconds</p>
               </div>
             </label>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Save Button */}
         <div className="flex items-center space-x-4">
-          <button type="submit" className="btn-primary">
+          <Button type="submit">
             Save Settings
-          </button>
+          </Button>
           {saved && (
             <span className="text-green-500 text-sm">✓ Settings saved successfully</span>
           )}

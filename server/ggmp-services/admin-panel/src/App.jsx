@@ -5,6 +5,7 @@ import TokenManagement from './pages/TokenManagement'
 import ServerList from './pages/ServerList'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
+import { Button } from './components/ui/button'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -64,12 +65,13 @@ function App() {
               </div>
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-400">Welcome, {currentUser?.username}</span>
-                <button
+                <Button
                   onClick={handleLogout}
-                  className="btn-danger text-sm"
+                  variant="destructive"
+                  size="sm"
                 >
                   Logout
-                </button>
+                </Button>
               </div>
             </div>
           </div>

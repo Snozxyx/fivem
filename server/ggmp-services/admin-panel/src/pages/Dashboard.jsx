@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { Button } from '../components/ui/button'
+import { Badge } from '../components/ui/badge'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -53,29 +56,30 @@ export default function Dashboard() {
   }
 
   const StatCard = ({ title, value, icon, color = 'ggmp-primary' }) => (
-    <div className="card">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm text-gray-400 uppercase tracking-wide">{title}</p>
-          <p className={`text-3xl font-bold mt-2 text-${color}`}>{value}</p>
+    <Card>
+      <CardContent className="pt-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-400 uppercase tracking-wide">{title}</p>
+            <p className={`text-3xl font-bold mt-2 text-${color}`}>{value}</p>
+          </div>
+          <div className={`text-4xl text-${color} opacity-20`}>{icon}</div>
         </div>
-        <div className={`text-4xl text-${color} opacity-20`}>{icon}</div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 
   const ServiceStatus = ({ name, status, port }) => (
     <div className="flex items-center justify-between p-4 border-b border-gray-800 last:border-0">
       <div className="flex items-center space-x-3">
-        <div className={`w-3 h-3 rounded-full ${status === 'ok' ? 'bg-green-500' : 'bg-red-500'}`} />
+        <Badge variant={status === 'ok' ? 'success' : 'destructive'}>
+          {status === 'ok' ? 'Online' : 'Offline'}
+        </Badge>
         <div>
           <p className="font-medium">{name}</p>
           <p className="text-sm text-gray-400">Port {port}</p>
         </div>
       </div>
-      <span className={`text-sm font-medium ${status === 'ok' ? 'text-green-500' : 'text-red-500'}`}>
-        {status === 'ok' ? 'Online' : 'Offline'}
-      </span>
     </div>
   )
 
@@ -103,26 +107,34 @@ export default function Dashboard() {
       </div>
 
       {/* Services Status */}
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Services Status</h2>
-        <div className="space-y-0">
-          {services.map(service => (
-            <ServiceStatus key={service.name} {...service} />
-          ))}
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Services Status</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-0">
+            {services.map(service => (
+              <ServiceStatus key={service.name} {...service} />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Quick Actions */}
-      <div className="card">
-        <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button className="btn-primary">Generate New Token</button>
-          <button className="btn-secondary">View All Servers</button>
-          <button className="bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
-            View Logs
-          </button>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Button>Generate New Token</Button>
+            <Button variant="secondary">View All Servers</Button>
+            <Button className="bg-purple-600 hover:bg-purple-700">
+              View Logs
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
