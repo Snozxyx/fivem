@@ -1,5 +1,4 @@
 name: Build GGMP Windows Client
-
 on:
   push:
     branches: [ master, main, develop ]
@@ -21,10 +20,8 @@ on:
         options:
           - Debug
           - Release
-
 env:
   BUILD_TYPE: ${{ github.event.inputs.build_type || 'Release' }}
-
 jobs:
   build-windows-client:
     name: Build FiveM Windows Client
@@ -94,8 +91,8 @@ jobs:
       - name: Build FiveM
         shell: cmd
         run: |
-          cd code\build\five\windows
-          msbuild Cfx.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
+          cd code\build\five
+          msbuild CitizenMP.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
           
       - name: Package artifacts
         shell: powershell
@@ -142,7 +139,6 @@ jobs:
           path: |
             artifacts/**/*.pdb
           retention-days: 90
-
   build-windows-server:
     name: Build FiveM Windows Server
     runs-on: windows-latest
@@ -193,7 +189,7 @@ jobs:
         shell: cmd
         run: |
           cd code\build\server\windows
-          msbuild Cfx.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
+          msbuild CitizenMP.sln /p:Configuration=${{ env.BUILD_TYPE }} /p:Platform=x64 /m /v:minimal /nologo
           
       - name: Package server artifacts
         shell: powershell
@@ -240,7 +236,6 @@ jobs:
           path: |
             server-artifacts/**/*.pdb
           retention-days: 90
-
   create-release:
     name: Create Release Package
     needs: [build-windows-client, build-windows-server]
