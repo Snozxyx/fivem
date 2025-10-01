@@ -57,19 +57,22 @@ jobs:
       - name: Install Windows SDK 10.0.22000.0
         shell: powershell
         run: |
-          Write-Host "Installing Windows SDK 10.0.22000.0 via Chocolatey..."
-          
-          # Install Windows SDK using Chocolatey
-          choco install windows-sdk-10.1 --version=10.1.22000.832 --force -y
-          
+          Write-Host "Installing Windows SDK 10.0.22000.0 directly from Microsoft..."
+
+          $url = "https://download.microsoft.com/download/9/7/6/976f5d64-3a9f-4c8a-b2f0-2f5a9a1b3b6c/WinSDKSetup.exe"
+          $installer = "$env:RUNNER_TEMP\WinSDKSetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
+
+          & $installer /features OptionId.WindowsDesktopDebuggers OptionId.DesktopCPPx64 /norestart /quiet
+
           # Verify installation
           $sdkPath = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0"
           if (Test-Path $sdkPath) {
-              Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
+            Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
           } else {
-              Write-Warning "SDK path not found at expected location, checking alternate paths..."
-              $sdkRoot = "C:\Program Files (x86)\Windows Kits\10"
-              Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found: $_" }
+            Write-Warning "SDK path not found at expected location, checking alternate paths..."
+            $sdkRoot = "C:\Program Files (x86)\Windows Kits\10\bin"
+            Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found SDK bin: $($_.FullName)" }
           }
           
       - name: Cache Chrome CEF
@@ -186,19 +189,22 @@ jobs:
       - name: Install Windows SDK 10.0.22000.0
         shell: powershell
         run: |
-          Write-Host "Installing Windows SDK 10.0.22000.0 via Chocolatey..."
-          
-          # Install Windows SDK using Chocolatey
-          choco install windows-sdk-10.1 --version=10.1.22000.832 --force -y
-          
+          Write-Host "Installing Windows SDK 10.0.22000.0 directly from Microsoft..."
+
+          $url = "https://download.microsoft.com/download/9/7/6/976f5d64-3a9f-4c8a-b2f0-2f5a9a1b3b6c/WinSDKSetup.exe"
+          $installer = "$env:RUNNER_TEMP\WinSDKSetup.exe"
+          Invoke-WebRequest -Uri $url -OutFile $installer -UseBasicParsing
+
+          & $installer /features OptionId.WindowsDesktopDebuggers OptionId.DesktopCPPx64 /norestart /quiet
+
           # Verify installation
           $sdkPath = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0"
           if (Test-Path $sdkPath) {
-              Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
+            Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
           } else {
-              Write-Warning "SDK path not found at expected location, checking alternate paths..."
-              $sdkRoot = "C:\Program Files (x86)\Windows Kits\10"
-              Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found: $_" }
+            Write-Warning "SDK path not found at expected location, checking alternate paths..."
+            $sdkRoot = "C:\Program Files (x86)\Windows Kits\10\bin"
+            Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found SDK bin: $($_.FullName)" }
           }
           
       - name: Cache Build Dependencies
@@ -268,7 +274,7 @@ jobs:
         if: env.BUILD_TYPE == 'Release'
         uses: actions/upload-artifact@v4
         with:
-          name: ggmp-fivem-server-windows-symbols-${{ github.run_number }}
+          name: ggmp-fivem-server-windows-${{ github.run_number }}
           path: |
             server-artifacts/**/*.pdb
           retention-days: 90
