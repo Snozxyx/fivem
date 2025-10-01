@@ -53,6 +53,22 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: '[17.0,18.0)'
+
+      - name: Install Windows SDK 10.0.22000.0
+        shell: powershell
+        run: |
+          # Download and install Windows SDK 10.0.22000.0
+          Write-Host "Installing Windows SDK 10.0.22000.0..."
+          $installerUrl = "https://go.microsoft.com/fwlink/?linkid=2164145"
+          $installerPath = "$env:TEMP\winsdksetup.exe"
+          
+          # Download the installer
+          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing
+          
+          # Install SDK components needed for MSBuild
+          Start-Process -FilePath $installerPath -ArgumentList '/quiet', '/norestart', '/features', 'OptionId.WindowsDesktopDebuggers', 'OptionId.DesktopCPPx64', 'OptionId.DesktopCPPx86' -Wait
+          
+          Write-Host "Windows SDK 10.0.22000.0 installation complete"
           
       - name: Cache Chrome CEF
         id: cache-chrome
@@ -77,7 +93,7 @@ jobs:
           key: ${{ runner.os }}-build-deps-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-deps-
-            
+          
       - name: Build game natives
         shell: cmd
         run: |
@@ -164,6 +180,22 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: '[17.0,18.0)'
+
+      - name: Install Windows SDK 10.0.22000.0
+        shell: powershell
+        run: |
+          # Download and install Windows SDK 10.0.22000.0
+          Write-Host "Installing Windows SDK 10.0.22000.0..."
+          $installerUrl = "https://go.microsoft.com/fwlink/?linkid=2164145"
+          $installerPath = "$env:TEMP\winsdksetup.exe"
+          
+          # Download the installer
+          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing
+          
+          # Install SDK components needed for MSBuild
+          Start-Process -FilePath $installerPath -ArgumentList '/quiet', '/norestart', '/features', 'OptionId.WindowsDesktopDebuggers', 'OptionId.DesktopCPPx64', 'OptionId.DesktopCPPx86' -Wait
+          
+          Write-Host "Windows SDK 10.0.22000.0 installation complete"
           
       - name: Cache Build Dependencies
         uses: actions/cache@v4
@@ -174,7 +206,7 @@ jobs:
           key: ${{ runner.os }}-server-build-deps-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-server-build-deps-
-            
+          
       - name: Build game natives
         shell: cmd
         run: |
