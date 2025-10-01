@@ -53,22 +53,24 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: '[17.0,18.0)'
-
+          
       - name: Install Windows SDK 10.0.22000.0
         shell: powershell
         run: |
-          # Download and install Windows SDK 10.0.22000.0
-          Write-Host "Installing Windows SDK 10.0.22000.0..."
-          $installerUrl = "https://go.microsoft.com/fwlink/?linkid=2164145"
-          $installerPath = "$env:TEMP\winsdksetup.exe"
+          Write-Host "Installing Windows SDK 10.0.22000.0 via Chocolatey..."
           
-          # Download the installer
-          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing
+          # Install Windows SDK using Chocolatey
+          choco install windows-sdk-10.1 --version=10.1.22000.832 --force -y
           
-          # Install SDK components needed for MSBuild
-          Start-Process -FilePath $installerPath -ArgumentList '/quiet', '/norestart', '/features', 'OptionId.WindowsDesktopDebuggers', 'OptionId.DesktopCPPx64', 'OptionId.DesktopCPPx86' -Wait
-          
-          Write-Host "Windows SDK 10.0.22000.0 installation complete"
+          # Verify installation
+          $sdkPath = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0"
+          if (Test-Path $sdkPath) {
+              Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
+          } else {
+              Write-Warning "SDK path not found at expected location, checking alternate paths..."
+              $sdkRoot = "C:\Program Files (x86)\Windows Kits\10"
+              Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found: $_" }
+          }
           
       - name: Cache Chrome CEF
         id: cache-chrome
@@ -180,22 +182,24 @@ jobs:
         uses: microsoft/setup-msbuild@v2
         with:
           vs-version: '[17.0,18.0)'
-
+          
       - name: Install Windows SDK 10.0.22000.0
         shell: powershell
         run: |
-          # Download and install Windows SDK 10.0.22000.0
-          Write-Host "Installing Windows SDK 10.0.22000.0..."
-          $installerUrl = "https://go.microsoft.com/fwlink/?linkid=2164145"
-          $installerPath = "$env:TEMP\winsdksetup.exe"
+          Write-Host "Installing Windows SDK 10.0.22000.0 via Chocolatey..."
           
-          # Download the installer
-          Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing
+          # Install Windows SDK using Chocolatey
+          choco install windows-sdk-10.1 --version=10.1.22000.832 --force -y
           
-          # Install SDK components needed for MSBuild
-          Start-Process -FilePath $installerPath -ArgumentList '/quiet', '/norestart', '/features', 'OptionId.WindowsDesktopDebuggers', 'OptionId.DesktopCPPx64', 'OptionId.DesktopCPPx86' -Wait
-          
-          Write-Host "Windows SDK 10.0.22000.0 installation complete"
+          # Verify installation
+          $sdkPath = "C:\Program Files (x86)\Windows Kits\10\bin\10.0.22000.0"
+          if (Test-Path $sdkPath) {
+              Write-Host "Windows SDK 10.0.22000.0 installed successfully at: $sdkPath"
+          } else {
+              Write-Warning "SDK path not found at expected location, checking alternate paths..."
+              $sdkRoot = "C:\Program Files (x86)\Windows Kits\10"
+              Get-ChildItem -Path $sdkRoot -Directory | ForEach-Object { Write-Host "Found: $_" }
+          }
           
       - name: Cache Build Dependencies
         uses: actions/cache@v4
@@ -340,7 +344,7 @@ jobs:
           
           - Build: ${{ github.run_number }}
           - Commit: ${{ github.sha }}
-          - Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          - Date: $(date -u "%Y-%m-%d %H:%M:%S UTC")
           EOF
           
           # Copy additional files
